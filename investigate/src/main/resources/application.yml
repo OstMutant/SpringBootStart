@@ -1,1 +1,11 @@
+spring:
+  profiles:
+    active: default
+
+authentication:
+  endpoint: https://login.salesforce.com/services/oauth2/token
+  clientId: 3MVG9Kip4IKAZQEVRP3DGbzdPGj1OmdFpbEFJK.2FHl8QUpRdxn5n9ZjDQLgerFvbzA0Ukybkp.m97iwkWdsB
+  clientSecret: 783625559E34E2C56D5E4D027C662DA2B2D57A314C0FE7238B4E46C9212B69FC
+  username: ost.mutant@creative-koala-kuj6mn.com
+  password: test@1977
 
