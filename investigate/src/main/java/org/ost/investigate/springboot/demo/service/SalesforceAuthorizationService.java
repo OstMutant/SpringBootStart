@@ -1,10 +1,7 @@
 package org.ost.investigate.springboot.demo.service;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.ost.investigate.springboot.demo.config.AuthorizationConfig;
 import org.ost.investigate.springboot.demo.dto.authentication.AuthorizationRequest;
 import org.ost.investigate.springboot.demo.dto.authentication.AuthorizationResponse;
@@ -16,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -43,7 +39,7 @@ public class SalesforceAuthorizationService {
     }
 
     private String getAuthorizationValue(AuthorizationResponse authorizationResponse) {
-        return authorizationResponse.getTokenType() + " " + authorizationResponse.getAccessToken();
+        return authorizationResponse.getAccessToken();
     }
 
     private String authenticate() {
@@ -60,7 +56,8 @@ public class SalesforceAuthorizationService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.setAll(new ObjectMapper().convertValue(authorizationRequest, new TypeReference<>() {}));
+        map.setAll(new ObjectMapper().convertValue(authorizationRequest, new TypeReference<>() {
+        }));
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();

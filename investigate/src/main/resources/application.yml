@@ -9,3 +9,9 @@ authentication:
   username: ost.mutant@creative-koala-kuj6mn.com
   password: test@1977
 
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+  level:
+    org.springframework: INFO
+    org.ost.investigate: INFO
