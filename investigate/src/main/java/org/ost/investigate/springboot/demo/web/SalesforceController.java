@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.ost.investigate.springboot.demo.service.SalesforceAuthorizationService;
 import org.ost.investigate.springboot.demo.service.SalesforceClient;
+import org.ost.investigate.springboot.demo.service.SalesforceSimpleClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,11 +17,11 @@ public class SalesforceController {
 
     final SalesforceAuthorizationService salesforceAuthorizationService;
 
-    final SalesforceClient salesforceClient;
+    final SalesforceSimpleClient salesforceClient;
 
     @Autowired
     public SalesforceController(SalesforceAuthorizationService salesforceAuthorizationService,
-                                SalesforceClient salesforceClient) {
+                                SalesforceSimpleClient salesforceClient) {
         this.salesforceAuthorizationService = salesforceAuthorizationService;
         this.salesforceClient = salesforceClient;
     }

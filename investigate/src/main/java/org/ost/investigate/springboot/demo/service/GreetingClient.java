@@ -1,28 +1,28 @@
 package org.ost.investigate.springboot.demo.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.ost.investigate.springboot.demo.config.LocalConfig;
 import org.ost.investigate.springboot.demo.dto.Greeting;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 @Service
 @Slf4j
 public class GreetingClient {
     private final WebClient webClient;
 
-    public GreetingClient() {
+    public GreetingClient(LocalConfig config) {
         this.webClient = WebClient.builder()
-                .baseUrl("http://localhost:8080")
+                .baseUrl(String.format("http://%s:%s", config.getHost(), config.getPort()))
                 .filters(exchangeFilterFunctions -> {
                     exchangeFilterFunctions.add(logRequest());
                     exchangeFilterFunctions.add(logResponse());
                 })
                 .build();
     }
+
     public Mono<Greeting> getRedirectedGreeting(String name) {
         return webClient.get()
                 .uri("/greeting?name={name}", name)
@@ -39,6 +39,7 @@ public class GreetingClient {
             return Mono.just(clientRequest);
         });
     }
+
     ExchangeFilterFunction logResponse() {
         return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
             log.info("Response status code: " + clientResponse.statusCode());

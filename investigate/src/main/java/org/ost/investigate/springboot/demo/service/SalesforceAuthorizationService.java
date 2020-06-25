@@ -2,6 +2,7 @@ package org.ost.investigate.springboot.demo.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ost.investigate.springboot.demo.config.AuthorizationConfig;
 import org.ost.investigate.springboot.demo.dto.authentication.AuthorizationRequest;
@@ -28,6 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class SalesforceAuthorizationService {
     private final AuthorizationConfig authorizationConfig;
+
     private AtomicReference<String> token = new AtomicReference<>();
 
     @Autowired

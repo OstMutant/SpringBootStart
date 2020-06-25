@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.BootstrapHandlers;
 import reactor.netty.http.client.HttpClient;
+import reactor.netty.tcp.TcpClient;
 
 import java.nio.charset.StandardCharsets;
 
@@ -45,7 +46,7 @@ public class SalesforceClient {
                         tcpClient.bootstrap(bootstrap ->
                                 BootstrapHandlers.updateLogSupport(bootstrap, new HttpLoggingHandler())));
         this.webClient = WebClient.builder()
-                .baseUrl("https://" + config.getAcc() + "." + config.getApp() + ".salesforce.com")
+                .baseUrl(config.getHost())
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }

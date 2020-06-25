@@ -10,8 +10,9 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @NoArgsConstructor
 @ToString
-@ConfigurationProperties(prefix = "salesforce.application")
-public class SalesforceConfig {
+@ConfigurationProperties(prefix = "local")
+public class LocalConfig {
     private String host;
-    private Integer port;
+    private int port;
 }
+
