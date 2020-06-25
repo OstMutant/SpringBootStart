@@ -10,11 +10,8 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @NoArgsConstructor
 @ToString
-@ConfigurationProperties(prefix = "salesforce.authentication")
-public class AuthorizationConfig {
-    private String endpoint;
-    private String clientId;
-    private String clientSecret;
-    private String username;
-    private String password;
+@ConfigurationProperties(prefix = "salesforce.application.host")
+public class SalesforceConfig {
+    private String acc;
+    private String app;
 }

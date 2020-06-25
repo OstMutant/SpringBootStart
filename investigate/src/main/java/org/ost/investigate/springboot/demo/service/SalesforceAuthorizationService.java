@@ -2,6 +2,7 @@ package org.ost.investigate.springboot.demo.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.ost.investigate.springboot.demo.config.AuthorizationConfig;
 import org.ost.investigate.springboot.demo.dto.authentication.AuthorizationRequest;
 import org.ost.investigate.springboot.demo.dto.authentication.AuthorizationResponse;
@@ -20,33 +21,29 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static java.util.Optional.ofNullable;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@Slf4j
 public class SalesforceAuthorizationService {
     private final AuthorizationConfig authorizationConfig;
-    private AuthorizationResponse authorizationResponse;
-    private final ReentrantLock reLock = new ReentrantLock(true);
+    private AtomicReference<String> token = new AtomicReference<>();
 
-    public SalesforceAuthorizationService(@Autowired AuthorizationConfig authorizationConfig) {
+    @Autowired
+    public SalesforceAuthorizationService(AuthorizationConfig authorizationConfig) {
         this.authorizationConfig = authorizationConfig;
     }
 
-    public String getAuthorizationHeader() {
-        return ofNullable(authorizationResponse).map(v -> getAuthorizationValue(authorizationResponse)).orElse(authenticate());
-    }
-
-    private String getAuthorizationValue(AuthorizationResponse authorizationResponse) {
-        return authorizationResponse.getAccessToken();
+    public synchronized String getAuthorizationHeader() {
+        log.debug("get token - " + token.get());
+        String currentToken = token.get();
+        return currentToken != null ? currentToken : authenticate();
+//        return ofNullable(token.get()).orElse(authenticate());
     }
 
     private String authenticate() {
-        reLock.lock();
-        if (this.authorizationResponse != null)
-            return getAuthorizationValue(this.authorizationResponse);
-
+        log.debug("authenticate");
         AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
                 .clientId(authorizationConfig.getClientId())
                 .clientSecret(authorizationConfig.getClientSecret())
@@ -70,10 +67,8 @@ public class SalesforceAuthorizationService {
         RestTemplate rest = new RestTemplate();
         rest.setInterceptors(interceptors);
         rest.setRequestFactory(bufferingClientHttpRequestFactory);
-
-        authorizationResponse = rest.postForObject(authorizationConfig.getEndpoint(), httpEntity, AuthorizationResponse.class);
-        reLock.unlock();
-        return getAuthorizationValue(authorizationResponse);
+        token.set(Objects.requireNonNull(rest.postForObject(authorizationConfig.getEndpoint(), httpEntity, AuthorizationResponse.class)).getAccessToken());
+        return token.get();
     }
 
 }
