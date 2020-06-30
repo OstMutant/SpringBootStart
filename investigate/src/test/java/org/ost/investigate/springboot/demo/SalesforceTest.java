@@ -49,7 +49,7 @@ public class SalesforceTest {
     }
 
     @Test
-    public void getEmployeeById() throws Exception {
+    public void trySalesforce() throws Exception {
         WIREMOCK_SERVER.stubFor(WireMock.post(WireMock.urlMatching("/services/oauth2/token"))
 //                .withHeader("Accept", WireMock.equalTo("application/json"))
                 .willReturn(WireMock.aResponse()

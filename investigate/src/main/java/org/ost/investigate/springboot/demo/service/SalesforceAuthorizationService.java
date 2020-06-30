@@ -2,7 +2,6 @@ package org.ost.investigate.springboot.demo.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ost.investigate.springboot.demo.config.AuthorizationConfig;
 import org.ost.investigate.springboot.demo.dto.authentication.AuthorizationRequest;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,20 +44,46 @@ public class SalesforceAuthorizationService {
 //        return ofNullable(token.get()).orElse(authenticate());
     }
 
-    private String authenticate() {
-        log.debug("authenticate");
+
+    public synchronized String getAuthorizationHeaderWebClient() {
+        log.debug("get token - " + token.get());
+        String currentToken = token.get();
+        return currentToken != null ? currentToken : authenticateForWebClient();
+    }
+
+    private String authenticateForWebClient() {
+        log.debug("authenticateForWebClient");
+        WebClient webClient = WebClient.builder()
+                .baseUrl(authorizationConfig.getEndpoint())
+                .defaultHeaders(httpHeaders -> httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .build();
+        return webClient.post()
+                .bodyValue(getAuthorizationRequest())
+                .retrieve().bodyToMono(AuthorizationResponse.class).map(AuthorizationResponse::getAccessToken).block();
+    }
+
+    private MultiValueMap<String, String> getAuthorizationRequest() {
         AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
                 .clientId(authorizationConfig.getClientId())
                 .clientSecret(authorizationConfig.getClientSecret())
                 .username(authorizationConfig.getUsername())
                 .password(authorizationConfig.getPassword())
                 .build();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.setAll(new ObjectMapper().convertValue(authorizationRequest, new TypeReference<>() {
         }));
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+        return map;
+    }
+
+    private HttpEntity<MultiValueMap<String, String>> getHttpEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        return  new HttpEntity<>(getAuthorizationRequest(), headers);
+    }
+
+    private String authenticate() {
+        log.debug("authenticate");
+        HttpEntity<MultiValueMap<String, String>> httpEntity = getHttpEntity();
 
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
         interceptors.add(new LoggingRequestInterceptor());
