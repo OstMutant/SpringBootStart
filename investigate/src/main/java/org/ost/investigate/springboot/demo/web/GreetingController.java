@@ -35,7 +35,7 @@ public class GreetingController {
     }
 
     @GetMapping("/greeting/tests")
-    public Mono<Greeting> getTests(@RequestParam(value = "name") String name) {
+    public String getTests(@RequestParam(value = "name", defaultValue = "World") String name) {
         return greetingClient.getRedirectedTest(name);
     }
 }

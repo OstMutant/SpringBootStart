@@ -1,13 +1,17 @@
 package org.ost.investigate.springboot.demo.service;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.ost.investigate.springboot.demo.config.LocalConfig;
 import org.ost.investigate.springboot.demo.dto.Greeting;
+import org.ost.investigate.springboot.demo.service.exceptions.MyCustomConnectionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -31,15 +35,16 @@ public class GreetingClient {
                 .bodyToMono(Greeting.class);
     }
 
-    public Mono<Greeting> getRedirectedTest(String name) {
-//        throw new RuntimeException();
-        return webClient.get()
-                .uri("/greeting1?name={name}", name)
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> {
-                    return Mono.error(new Exception("Test"));
-                })
-                .bodyToMono(Greeting.class);
+    @SneakyThrows
+    public String getRedirectedTest(String name) {
+        throw new IOException();
+//        return webClient.get()
+//                .uri("/greeting?name={name}", name)
+//                .retrieve()
+//                .onStatus(v->v.is2xxSuccessful(), response -> {
+//                    return Mono.error(new MyCustomConnectionException(response.statusCode().toString(),"Test Exception"));
+//                })
+//                .bodyToMono(String.class).block();
     }
 
     ExchangeFilterFunction logRequest() {

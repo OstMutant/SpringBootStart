@@ -77,42 +77,42 @@ management:
     http:
       include: RESPONSE_HEADERS
 
----
-spring:
-  profiles: test
-
-salesforce:
-  authentication:
-    endpoint: http://localhost:8081/services/oauth2/token
-    #    clientId: 3MVG9Kip4IKAZQEVRP3DGbzdPGj1OmdFpbEFJK.2FHl8QUpRdxn5n9ZjDQLgerFvbzA0Ukybkp.m97iwkWdsB
-    #    clientSecret: 783625559E34E2C56D5E4D027C662DA2B2D57A314C0FE7238B4E46C9212B69FC
-    #    username: ost.mutant@creative-koala-kuj6mn.com
-    #    password: test@1977
-    clientId: 3MVG9lsAlIP.W_V89s9Ff4pCO5T6pJwQUb9.i7iGW.qokXeod0N9lVquus.CeR57j5tnMjoYx5F.GgZtrAz.G
-    clientSecret: 86339542AB9D8161165793087299B5E8F74FDF0BDA8F135584B1E7F9DF944DAF
-    username: ost.mutant@resilient-impala-17mwdc.com
-    password: test@1977
-  application:
-    #      acc: creative-koala-kuj6mn-dev-ed
-    host: http://localhost:8081
-    port: 8081
-
-local:
-  host: localhost
-  port: 8081
-
-logging:
-  pattern:
-    console: "%d %-5level %logger : %msg%n"
-  level:
-    org.springframework: INFO
-    org.ost.investigate: DEBUG
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "httptrace"
-  trace:
-    http:
-      include: RESPONSE_HEADERS
+#---
+#spring:
+#  profiles: test
+#
+#salesforce:
+#  authentication:
+#    endpoint: http://localhost:8081/services/oauth2/token
+#    #    clientId: 3MVG9Kip4IKAZQEVRP3DGbzdPGj1OmdFpbEFJK.2FHl8QUpRdxn5n9ZjDQLgerFvbzA0Ukybkp.m97iwkWdsB
+#    #    clientSecret: 783625559E34E2C56D5E4D027C662DA2B2D57A314C0FE7238B4E46C9212B69FC
+#    #    username: ost.mutant@creative-koala-kuj6mn.com
+#    #    password: test@1977
+#    clientId: 3MVG9lsAlIP.W_V89s9Ff4pCO5T6pJwQUb9.i7iGW.qokXeod0N9lVquus.CeR57j5tnMjoYx5F.GgZtrAz.G
+#    clientSecret: 86339542AB9D8161165793087299B5E8F74FDF0BDA8F135584B1E7F9DF944DAF
+#    username: ost.mutant@resilient-impala-17mwdc.com
+#    password: test@1977
+#  application:
+#    #      acc: creative-koala-kuj6mn-dev-ed
+#    host: http://localhost:8081
+#    port: 8081
+#
+#local:
+#  host: localhost
+#  port: 8081
+#
+#logging:
+#  pattern:
+#    console: "%d %-5level %logger : %msg%n"
+#  level:
+#    org.springframework: INFO
+#    org.ost.investigate: DEBUG
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "httptrace"
+#  trace:
+#    http:
+#      include: RESPONSE_HEADERS

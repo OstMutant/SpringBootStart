@@ -3,11 +3,15 @@ package org.ost.investigate.springboot.demo.web;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.extern.slf4j.Slf4j;
+import org.ost.investigate.springboot.demo.service.exceptions.MyCustomConnectionException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -63,12 +67,24 @@ public class CustomExceptionHandler {
 
     }
 
-    @ExceptionHandler(value = RuntimeException.class)
-    public ResponseEntity<CustomErrorResponse> handleGenericNotFoundException(Exception e) {
-        CustomErrorResponse error = new CustomErrorResponse("NOT_FOUND_ERROR", e.getMessage());
-        error.setTimestamp(LocalDateTime.now());
-        error.setStatus((HttpStatus.NOT_FOUND.value()));
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    @ExceptionHandler({Exception.class, MyCustomConnectionException.class})
+    public ResponseEntity<CustomErrorResponse> handleException(Exception e) {
+        System.out.println("Exception=" + e);
+        System.out.println("Exception=" + e.getCause());
+        if(e instanceof MyCustomConnectionException){
+            System.out.println("----------MyCustomConnectionException-----------");
+
+            CustomErrorResponse error = new CustomErrorResponse(((MyCustomConnectionException) e).getStatus(), e.getMessage());
+            error.setTimestamp(LocalDateTime.now());
+            error.setStatus((HttpStatus.NOT_FOUND.value()));
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+            System.out.println("----------Exception-----------");
+            CustomErrorResponse error = new CustomErrorResponse("Exception", e.getMessage());
+            error.setTimestamp(LocalDateTime.now());
+            error.setStatus((HttpStatus.NOT_FOUND.value()));
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 
     }
 }

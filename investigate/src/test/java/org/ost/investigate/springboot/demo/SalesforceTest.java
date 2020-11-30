@@ -3,25 +3,18 @@ package org.ost.investigate.springboot.demo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.ost.investigate.springboot.demo.config.SalesforceConfig;
 import org.ost.investigate.springboot.demo.service.SalesforceAuthorizationService;
 import org.ost.investigate.springboot.demo.service.SalesforceSimpleClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//@ActiveProfiles("test")
 public class SalesforceTest {
 
     @Autowired
@@ -35,18 +28,18 @@ public class SalesforceTest {
     @Autowired
     private SalesforceAuthorizationService salesforceAuthorizationService;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        WIREMOCK_SERVER = new WireMockServer(config.getPort());
-        WIREMOCK_SERVER.start();
-    }
-
-
-    @After
-    public void tearDown() {
-        WIREMOCK_SERVER.shutdown();
-    }
+//    @Before
+//    public void setUp() {
+//        MockitoAnnotations.initMocks(this);
+//        WIREMOCK_SERVER = new WireMockServer(config.getPort());
+//        WIREMOCK_SERVER.start();
+//    }
+//
+//
+//    @After
+//    public void tearDown() {
+//        WIREMOCK_SERVER.shutdown();
+//    }
 
     @Test
     public void trySalesforce() throws Exception {
